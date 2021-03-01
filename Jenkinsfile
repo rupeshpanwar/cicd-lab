@@ -32,12 +32,6 @@ pipeline{
         stage ('Publish to Nexus'){
             steps {
                 echo ' publishing....'
-               // nexusArtifactUploader artifacts: [[artifactId: 'DevOpsLab', 
-               //classifier: '', file: 'target/DevOpsLab-0.0.2-SNAPSHOT.war', 
-               //type: 'war']], credentialsId: 'cd6c3cae-ebbd-49fd-8353-3220c507dea8', 
-               //groupId: 'com.vinaysdevopslab', nexusUrl: '172.20.10.16:8081', 
-               //nexusVersion: 'nexus3', protocol: 'http', 
-               //repository: 'DevOpsLab-SNAPSHOT', version: '0.0.2-SNAPSHOT'
                 script {
 
                 def NexusRepo = Version.endsWith("SNAPSHOT") ? "DevOpsLab-SNAPSHOT'" : "DevOpsLab-RELEASE"
@@ -69,27 +63,27 @@ pipeline{
             }
         }
     }
-    //     // Stage 5 : Deploying the build artifact to Apache Tomcat
-    //     stage ('Deploy to Tomcat'){
-    //         steps {
-    //             echo "Deploying ...."
-    //             sshPublisher(publishers: 
-    //             [sshPublisherDesc(
-    //                 configName: 'Ansible_Controller', 
-    //                 transfers: [
-    //                     sshTransfer(
-    //                             cleanRemote:false,
-    //                             execCommand: 'ansible-playbook /opt/playbooks/downloadanddeploy_as_tomcat_user.yaml -i /opt/playbooks/hosts',
-    //                             execTimeout: 120000
-    //                     )
-    //                 ], 
-    //                 usePromotionTimestamp: false, 
-    //                 useWorkspaceInPromotion: false, 
-    //                 verbose: false)
-    //                 ])
+        // Stage 5 : Deploying the build artifact to Apache Tomcat
+        stage ('Deploy to Tomcat'){
+            steps {
+                echo "Deploying ...."
+                sshPublisher(publishers: 
+                [sshPublisherDesc(
+                    configName: 'Ansible_Controller', 
+                    transfers: [
+                        sshTransfer(
+                                cleanRemote:false,
+                                execCommand: 'ansible-playbook /home/ec2-user/deployartifacts.yml -i /etc/ansible/hosts',
+                                execTimeout: 120000
+                        )
+                    ], 
+                    usePromotionTimestamp: false, 
+                    useWorkspaceInPromotion: false, 
+                    verbose: false)
+                    ])
             
-    //         }
-    //     }
+            }
+        }
 
     // // Stage 6 : Deploying the build artifact to Docker
     //     stage ('Deploy to Docker'){
