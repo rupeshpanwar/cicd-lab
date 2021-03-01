@@ -62,7 +62,7 @@ pipeline{
                         echo "Name is '${Name}'"
             }
         }
-    }
+    
         // Stage 5 : Deploying the build artifact to Apache Tomcat
         stage ('Deploy to Tomcat'){
             steps {
@@ -84,7 +84,7 @@ pipeline{
             
             }
         }
-
+    }
     // // Stage 6 : Deploying the build artifact to Docker
     //     stage ('Deploy to Docker'){
     //         steps {
