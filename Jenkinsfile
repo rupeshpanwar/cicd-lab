@@ -4,12 +4,12 @@ pipeline{
     tools {
         maven 'maven'
     }
-    // environment{
-    //    ArtifactId = readMavenPom().getArtifactId()
-    //    Version = readMavenPom().getVersion()
-    //    Name = readMavenPom().getName()
-    //    GroupId = readMavenPom().getGroupId()
-    // }
+    environment{
+       ArtifactId = readMavenPom().getArtifactId()
+       Version = readMavenPom().getVersion()
+       Name = readMavenPom().getName()
+       GroupId = readMavenPom().getGroupId()
+    }
     stages {
         // Specify various stage with in stages
 
@@ -32,38 +32,43 @@ pipeline{
         stage ('Publish to Nexus'){
             steps {
                 echo ' publishing....'
-                nexusArtifactUploader artifacts: [[artifactId: 'DevOpsLab', classifier: '', file: 'target/DevOpsLab-0.0.2-SNAPSHOT.war', type: 'war']], credentialsId: 'cd6c3cae-ebbd-49fd-8353-3220c507dea8', groupId: 'com.vinaysdevopslab', nexusUrl: '172.20.10.16:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'DevOpsLab-SNAPSHOT', version: '0.0.2-SNAPSHOT'
-            //     script {
+               // nexusArtifactUploader artifacts: [[artifactId: 'DevOpsLab', 
+               //classifier: '', file: 'target/DevOpsLab-0.0.2-SNAPSHOT.war', 
+               //type: 'war']], credentialsId: 'cd6c3cae-ebbd-49fd-8353-3220c507dea8', 
+               //groupId: 'com.vinaysdevopslab', nexusUrl: '172.20.10.16:8081', 
+               //nexusVersion: 'nexus3', protocol: 'http', 
+               //repository: 'DevOpsLab-SNAPSHOT', version: '0.0.2-SNAPSHOT'
+                script {
 
-            //     def NexusRepo = Version.endsWith("SNAPSHOT") ? "VinaysDevOpsLab-SNAPSHOT" : "VinaysDevOpsLab-RELEASE"
+                def NexusRepo = Version.endsWith("SNAPSHOT") ? "DevOpsLab-SNAPSHOT'" : "DevOpsLab-RELEASE"
 
-            //     nexusArtifactUploader artifacts: 
-            //     [[artifactId: "${ArtifactId}", 
-            //     classifier: '', 
-            //     file: "target/${ArtifactId}-${Version}.war", 
-            //     type: 'war']], 
-            //     credentialsId: '35e9b26e-269a-4804-a70d-6b2ec7a608ce', 
-            //     groupId: "${GroupId}", 
-            //     nexusUrl: '172.20.10.140:8081', 
-            //     nexusVersion: 'nexus3', 
-            //     protocol: 'http', 
-            //     repository: "${NexusRepo}", 
-            //     version: "${Version}"
-            //  }
+                nexusArtifactUploader artifacts: 
+                [[artifactId: "${ArtifactId}", 
+                classifier: '', 
+                file: "target/${ArtifactId}-${Version}.war", 
+                type: 'war']], 
+                credentialsId: 'cd6c3cae-ebbd-49fd-8353-3220c507dea8', 
+                groupId: "${GroupId}", 
+                nexusUrl: '172.20.10.16:8081, 
+                nexusVersion: 'nexus3', 
+                protocol: 'http', 
+                repository: "${NexusRepo}", 
+                version: "${Version}"
+             }
+            }
+        }
+    
+
+        // Stage 4 : Print some information
+        stage ('Print Environment variables'){
+            steps {
+                        echo "Artifact ID is '${ArtifactId}'"
+                        echo "Version is '${Version}'"
+                        echo "GroupID is '${GroupId}'"
+                        echo "Name is '${Name}'"
             }
         }
     }
-
-    //     // Stage 4 : Print some information
-    //     stage ('Print Environment variables'){
-    //                 steps {
-    //                     echo "Artifact ID is '${ArtifactId}'"
-    //                     echo "Version is '${Version}'"
-    //                     echo "GroupID is '${GroupId}'"
-    //                     echo "Name is '${Name}'"
-    //                 }
-    //             }
-
     //     // Stage 5 : Deploying the build artifact to Apache Tomcat
     //     stage ('Deploy to Tomcat'){
     //         steps {
