@@ -32,6 +32,7 @@ pipeline{
         stage ('Publish to Nexus'){
             steps {
                 echo ' publishing....'
+                nexusArtifactUploader artifacts: [[artifactId: 'DevOpsLab', classifier: '', file: 'target/DevOpsLab-0.0.2-SNAPSHOT.war', type: 'war']], credentialsId: 'cd6c3cae-ebbd-49fd-8353-3220c507dea8', groupId: 'com.vinaysdevopslab', nexusUrl: '172.20.10.16:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'DevOpsLab-SNAPSHOT', version: '0.0.2-SNAPSHOT'
             //     script {
 
             //     def NexusRepo = Version.endsWith("SNAPSHOT") ? "VinaysDevOpsLab-SNAPSHOT" : "VinaysDevOpsLab-RELEASE"
@@ -52,7 +53,7 @@ pipeline{
             }
         }
     }
-}
+
     //     // Stage 4 : Print some information
     //     stage ('Print Environment variables'){
     //                 steps {
@@ -112,4 +113,4 @@ pipeline{
 
     // }
 
-//}
+}
